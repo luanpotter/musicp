@@ -1,12 +1,16 @@
 {
   "name": "musicp",
   "version": "1.0.0",
-  "description": "",
+  "description": "A very simple YouTube based music manager",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/luanpotter/musicp.git"
+  },
+  "author": "Luan Nico",
   "license": "MIT",
   "dependencies": {
     "lodash": "^4.17.4",
