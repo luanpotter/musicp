@@ -3,6 +3,7 @@ const _ = require('lodash');
 const Youtube = require('youtube-node');
 const exec = require('child_process').exec;
 const wait = require('wait.for-es6');
+const chalk = require('chalk');
 
 const files = require('./files');
 const cli = require('./cli');
@@ -56,18 +57,18 @@ let CMDS = {
   add : (r, cmds) => {
     fetch(select(cmds[0]), d => {
       data.musics.push(d);
-      r('Added ' + d.name);
+      r(chalk.green('Added ' + d.name));
     });
   },
   key : (r, cmds) => {
     data.youtubeKey = cmds[0];
     youtube.setKey(cmds[0]);
-    r('Key set');
+    r(chalk.green('Key set'));
   },
   query : (r, cmds) => {
     youtube.search(cmds.join(' '), 5, function(error, result) {
       if (error) {
-        r('You need to set your key, use key [key].');
+        r(chalk.red('You need to set your key, use key [key].'));
       } else {
         lastSearch = result.items.map(videoMapper);
         r(lastSearch.map((r, i) => '[' + i + '] ' + r.name).join('\n'));
@@ -81,7 +82,7 @@ let CMDS = {
   remove : (r, cmds) => {
     let id = select(cmds[0]);
     data.musics = data.musics.filter(r => r.id !== id);
-    r('Removed');
+    r(chalk.green('Removed'));
   },
   update : r => {
     let ids = data.musics.map(d => d.id).filter(id => {
@@ -92,10 +93,10 @@ let CMDS = {
       yield wait.for(fs.writeFile, files.dir + '/files/urls', ids.join('\n'));
       yield wait.for(exec, '( cd ' + files.dir + '/files ; ' + data.config.y2mp3 + ' )');
       yield wait.for(fs.unlink, files.dir + '/files/urls');
-      r('Updated');
+      r(chalk.green('Updated'));
     };
     if (ids.length === 0) {
-      r('Nothing to update!');
+      r(chalk.blue('Nothing to update!'));
     } else {
       wait.launchFiber(download);
     }
@@ -103,18 +104,17 @@ let CMDS = {
   play : (r, cmds) => {
     function *t() {
       yield wait.for(exec, data.config.play + files.dir + '/files/' + select(cmds[0]) + '.mp3');
-      r('Playing');
+      r(chalk.green('Playing'));
     }
     wait.launchFiber(t);
   },
   pause : r => {
     function *t() {
       yield wait.for(exec, data.config.pause);
-      r('Paused');
+      r(chalk.green('Paused'));
     }
     wait.launchFiber(t);
-  },
-  asd : r => setTimeout(() => r('huez'), 2000)
+  }
 };
 
 let parse = function*(str) {
