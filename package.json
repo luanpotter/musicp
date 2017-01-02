@@ -6,14 +6,21 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/luanpotter/musicp.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luanpotter/musicp.git"
   },
   "author": "Luan Nico",
   "license": "MIT",
   "dependencies": {
+    "cli-spinner": "^0.2.5",
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "install": "^0.8.4",
     "lodash": "^4.17.4",
+    "npm": "^4.0.5",
+    "progress": "^1.1.8",
+    "wait.for-es6": "^0.1.0",
     "youtube-node": "^1.3.0"
   }
 }
