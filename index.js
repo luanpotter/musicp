@@ -96,7 +96,7 @@ let CMDS = {
       return !fs.existsSync(path);
     }).join('\n');
     fs.writeFileSync(dir + '/files/urls', ids);
-    exec('( cd ' + dir + '/files ; ' + y2mp3 + ' urls )', execCb);
+    exec('( cd ' + dir + '/files ; ' + y2mp3 + ' urls --ids )', execCb);
     fs.unlinkSync(dir + '/files/urls');
   },
   play : cmds => exec(cmus.play + select(cmds[0]) + '.mp3', execCb),
