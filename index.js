@@ -12,17 +12,29 @@ let youtube = new Youtube();
 
 let data;
 let lastSearch;
+let shuffle = false;
 
 let main = () => {
   files.bake();
   data = files.read();
   youtube.setKey(data.youtubeKey);
+  setInterval(sequence, 100);
   r.start();
 };
 
 function isPositiveInteger(n) {
     return n >>> 0 === parseFloat(n);
 }
+
+let sequence = () => {
+  if (shuffle) {
+    status(r => {
+      if (r[0] === 'stopped') {
+        CMDS.play(_.identity, [_.sample(lastSearch).id]);
+      }
+    });
+  }
+};
 
 let select = indexOrId => {
   if (isPositiveInteger(indexOrId)) {
@@ -55,6 +67,17 @@ let findBy = (r, fn) => {
   lastSearch = data.musics.filter(fn);
   let tags = m => m.tags.length ? ' [' + m.tags.join(', ') + ']' : '';
   r(lastSearch.map((m, i) => chalk[files.hasMusic(m.id) ? 'white' : 'red']('[' + i + '] ' + m.id + ' - ' + m.name + tags(m))).join('\n'));
+};
+
+let status = (cb) => {
+  exec(data.config.status, (_err, c) => {
+    let lines = c.split('\n');
+    let status = lines.find(l => l.startsWith('status ')).replace(/status /, '');
+    let music = lines.find(l => l.startsWith('file ')).replace(/file /, '');
+    let path = files.dir + '/files/', ext = '.mp3';
+    music = music.startsWith(path) ? music.substring(path.length, music.length - ext.length) : null;
+    cb([status, music]);
+  });
 };
 
 let CMDS = {
@@ -127,12 +150,24 @@ let CMDS = {
     }
     wait.launchFiber(t);
   },
+  resume : r => {
+    wait.launchFiber(function *() {
+      yield wait.for(exec, data.config.resume);
+      r(chalk.green('Playing'));
+    });
+  },
   pause : r => {
-    function *t() {
+    wait.launchFiber(function *() {
       yield wait.for(exec, data.config.pause);
       r(chalk.green('Paused'));
-    }
-    wait.launchFiber(t);
+    });
+  },
+  status : r => {
+    status(e => r(e[0] + ' - ' + e[1]));
+  },
+  shuffle : r => {
+    shuffle = !shuffle;
+    r('Toggled shuffle ' + (shuffle ? 'on' : 'off') + '.');
   }
 };
 

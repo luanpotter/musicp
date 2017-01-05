@@ -11,7 +11,9 @@ let defaultConfig = {
   config : {
     y2mp3 : 'mp3_multitube urls --ids',
     play : 'cmus-remote -f ',
-    pause : 'cmus-remote -u'
+    resume : 'cmus-remote -p',
+    pause : 'cmus-remote -u',
+    status : 'cmus-remote -Q'
   }
 };
 
