@@ -53,7 +53,8 @@ let fetch = (id, cb) => {
 
 let findBy = (r, fn) => {
   lastSearch = data.musics.filter(fn);
-  r(lastSearch.map((m, i) => chalk[files.hasMusic(m.id) ? 'white' : 'red']('[' + i + '] ' + m.id + ' - ' + m.name)).join('\n'));
+  let tags = m => m.tags.length ? ' [' + m.tags.join(', ') + ']' : '';
+  r(lastSearch.map((m, i) => chalk[files.hasMusic(m.id) ? 'white' : 'red']('[' + i + '] ' + m.id + ' - ' + m.name + tags(m))).join('\n'));
 };
 
 let CMDS = {
@@ -61,6 +62,7 @@ let CMDS = {
   see : r => r(JSON.stringify(data)),
   add : (r, cmds) => {
     fetch(select(cmds[0]), d => {
+      d.tags = [];
       data.musics.push(d);
       r(chalk.green('Added ' + d.name));
     });
@@ -85,6 +87,19 @@ let CMDS = {
   },
   find : (r, cmds) => {
     findBy(r, m => _.intersection((m.id + ' ' + m.name).toLowerCase().split(' '), cmds.map(e => e.toLowerCase())).length > 0);
+  },
+  tag : (r, cmds) => {
+    let id = select(cmds[0]);
+    let music = data.musics.find(r => r.id === id);
+    music.tags.push(...cmds.slice(1));
+    r(chalk.green('Tagged'));
+  },
+  tags : (r, cmds) => {
+    if (cmds.length === 0) {
+      r('[ ' + _.uniq(_.flatten(data.musics.map(m => m.tags))).join(', ') + ' ]');
+    } else {
+      findBy(r, m => m.tags.includes(cmds[0]));
+    }
   },
   remove : (r, cmds) => {
     let id = select(cmds[0]);
