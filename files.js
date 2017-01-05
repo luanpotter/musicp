@@ -23,4 +23,9 @@ let bake = () => {
   }
 };
 
-module.exports = { dir, save, read, bake };
+let hasMusic = (id) => {
+  let path = dir + '/files/' + id + '.mp3';
+  return fs.existsSync(path);
+};
+
+module.exports = { dir, save, read, bake, hasMusic };

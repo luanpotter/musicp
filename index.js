@@ -51,6 +51,11 @@ let fetch = (id, cb) => {
   });
 };
 
+let findBy = (r, fn) => {
+  lastSearch = data.musics.filter(fn);
+  r(lastSearch.map((m, i) => chalk[files.hasMusic(m.id) ? 'white' : 'red']('[' + i + '] ' + m.id + ' - ' + m.name)).join('\n'));
+};
+
 let CMDS = {
   exit : () => process.exit(0),
   see : r => r(JSON.stringify(data)),
@@ -76,8 +81,10 @@ let CMDS = {
     });
   },
   musics : r => {
-    lastSearch = data.musics;
-    r(data.musics.map((m, i) => '[' + i + '] ' + m.id + ' - ' + m.name).join('\n'));
+    findBy(r, _.identity);
+  },
+  find : (r, cmds) => {
+    findBy(r, m => _.intersection((m.id + ' ' + m.name).toLowerCase().split(' '), cmds.map(e => e.toLowerCase())).length > 0);
   },
   remove : (r, cmds) => {
     let id = select(cmds[0]);
@@ -85,10 +92,7 @@ let CMDS = {
     r(chalk.green('Removed'));
   },
   update : r => {
-    let ids = data.musics.map(d => d.id).filter(id => {
-      let path = files.dir + '/files/' + id + '.mp3';
-      return !fs.existsSync(path);
-    });
+    let ids = data.musics.map(d => d.id).filter(id => !files.hasMusic(id));
     let download = function*() {
       yield wait.for(fs.writeFile, files.dir + '/files/urls', ids.join('\n'));
       yield wait.for(exec, '( cd ' + files.dir + '/files ; ' + data.config.y2mp3 + ' )');
@@ -121,7 +125,7 @@ let parse = function*(str) {
   let cmd = str.trim().split(' ');
   let notFound = (r) => r('Command not found.');
   let fn = CMDS[cmd[0]] || notFound;
-  let promise = new Promise(r => setTimeout(() => fn(r, cmd.slice(1)), 0));
+  let promise = new Promise(r => fn(r, cmd.slice(1)));
   promise.then(() => files.save(data));
   return promise;
 };
