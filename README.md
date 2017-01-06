@@ -35,7 +35,7 @@ Then, you can edit the `data.json` config file and change the following keys, in
 	    "y2mp3" : "mp3_multitube urls --ids", // a temporary `url` file is created in the current dir
 	    "play" : "cmus-remote -f ", // the full mp3 file path is added to the end
 	    "resume" : "cmus-remote -p", // resume from where it was paused
-	    "pause" : "cmus-remote -u", //pauses
+	    "pause" : "cmus-remote -u", // pauses
 	    "status":"cmus-remote -Q"`// must return in the cmus format, but you can map yours with bash
 	}
 ```
