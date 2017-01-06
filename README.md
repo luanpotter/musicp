@@ -24,6 +24,22 @@ You will end up exporting `mp3_multitube` to the PATH.
 
 Follow [this tutorial](http://help.dimsemenov.com/kb/wordpress-royalslider-tutorials/wp-how-to-get-youtube-api-key) to get one.  
 
+### Custom helpers
+
+You can use different helpers (music player and youtube downloader) if you so desire.  
+For that, you need to first run the program so your `.musicp` folder will be downloaded and setup properly.  
+Then, you can edit the `data.json` config file and change the following keys, in order to use your own stuff:
+
+```
+	"config" : {
+	    "y2mp3" : "mp3_multitube urls --ids", // a temporary `url` file is created in the current dir
+	     "play" : "cmus-remote -f ", // the full mp3 file path is added to the end
+	     "resume" : "cmus-remote -p", // resume from where it was paused
+	     "pause" : "cmus-remote -u", //pauses
+	     "status":"cmus-remote -Q"`// must return a status in the cmus format, but you can easily map yours with bash
+	}
+```
+
 ## Usage
 
 Run `cmus` in another shell. Leave it on non-repeat (not 'C') and running, so `cmus-remote` can access it.  
@@ -39,6 +55,7 @@ Then you can:
   * update : download any new musics (they are red in `musics`)
   * play [list index or id] : play a music in cmus
   * pause : pause current playing song
+  * resume : resumes playing current song from where it stopped
   * status : see what's playing and the status
   * tag [list index or id] tag1 tag2... : tags the selected music with those tags
   * tags : list all tags added so far
