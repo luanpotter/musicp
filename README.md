@@ -1,6 +1,6 @@
 # musicp
 
-`musicp` is a simple music manager cli that allows you to easily acquire (via youtube), organize and play your favorite musics.  
+`musicp` is a simple music manager CLI that allows you to easily acquire (via youtube), organize and play your favorite musics.  
 
 ## Requirements
 
