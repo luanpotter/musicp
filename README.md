@@ -47,6 +47,7 @@ Then you can:
   * shuffle : starts playing a random song from the current list and keeps playing on shuffle from that list
 
 An important note: commands like `musics`, `find`, `tags <tag>` will set the current list. Commands like `play <list index>` or `shuffle` consider only the current list.
+`query` will also reset the list, but the list it sets can only be indexed by `add`. Therefore, be carefull while `query`ing while `shuffl`ing - it gets messy.
 
 ## Contributing
 
