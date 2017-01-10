@@ -12,9 +12,9 @@ let cli = function (processor) {
       while (true) {
         let name = yield prompt('> ');
         spinner.start();
-        let asd = yield processor(name);
+        let res = yield processor(name);
         spinner.stop(true);
-        console.log(asd);
+        console.log(res);
       }
     });
   }};
