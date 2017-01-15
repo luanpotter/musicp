@@ -73,9 +73,10 @@ let status = (cb) => {
   exec(data.config.status, (_err, c) => {
     let lines = c.split('\n');
     let status = lines.find(l => l.startsWith('status ')).replace(/status /, '');
-    let music = lines.find(l => l.startsWith('file ')).replace(/file /, '');
     let path = files.dir + '/files/', ext = '.mp3';
-    music = music.startsWith(path) ? music.substring(path.length, music.length - ext.length) : null;
+    let music = lines.find(l => l.startsWith('file '));
+    music = music ? music.replace(/file /, '') : null;
+    music = music && music.startsWith(path) ? music.substring(path.length, music.length - ext.length) : null;
     cb([status, music]);
   });
 };
