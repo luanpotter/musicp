@@ -164,7 +164,13 @@ let CMDS = {
     });
   },
   status : r => {
-    status(e => r(e[0] + ' - ' + e[1]));
+    status(e => {
+      if (e[1]) {
+        r(e[0] + ' - ' + e[1] + ' - ' + data.musics.find(t => t.id === e[1]).name);
+      } else {
+        r(e[0]);
+      }
+    });
   },
   shuffle : r => {
     shuffle = !shuffle;
