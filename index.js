@@ -19,6 +19,7 @@ let main = () => {
   data = files.read();
   youtube.setKey(data.youtubeKey);
   setInterval(sequence, 100);
+  lastSearch = data.musics;
   r.start();
 };
 
@@ -26,11 +27,15 @@ function isPositiveInteger(n) {
     return n >>> 0 === parseFloat(n);
 }
 
+let playNext = () => {
+  CMDS.play(_.identity, [_.sample(lastSearch).id]);
+};
+
 let sequence = () => {
   if (shuffle) {
     status(r => {
       if (r[0] === 'stopped') {
-        CMDS.play(_.identity, [_.sample(lastSearch).id]);
+        playNext();
       }
     });
   }
@@ -175,7 +180,12 @@ let CMDS = {
   shuffle : r => {
     shuffle = !shuffle;
     r('Toggled shuffle ' + (shuffle ? 'on' : 'off') + '.');
-  }
+  },
+  next : r => {
+    playNext();
+    r('Skipping');
+  },
+  skip : r => CMDS.next(r)
 };
 
 let parse = function*(str) {
