@@ -28,6 +28,11 @@
 .pub/
 build/
 
+# intellij/vscode stuff
+.classpath
+.project
+.settings/
+
 # Android related
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
