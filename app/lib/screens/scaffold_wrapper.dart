@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:musicp/state/app_state.dart';
+
+import '../state/app_state.dart';
 
 class ScaffoldWrapper extends StatelessWidget {
   final AppState state;
@@ -62,6 +63,10 @@ class ScaffoldWrapper extends StatelessWidget {
           ListTile(
             title: Text('Lists'),
             onTap: () => Navigator.of(context).pushNamed('/lists'),
+          ),
+          ListTile(
+            title: Text('Servers'),
+            onTap: () => Navigator.of(context).pushNamed('/servers'),
           ),
         ],
       )),

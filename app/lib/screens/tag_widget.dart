@@ -6,7 +6,12 @@ const COLORS = [
   Colors.blueGrey,
   Colors.cyan,
   Colors.indigo,
-];
+  Colors.lime,
+  Colors.orange,
+  Colors.red,
+  Colors.purple,
+  Colors.yellow,
+]; // TODO select pretty colors
 
 Random random = Random.secure();
 

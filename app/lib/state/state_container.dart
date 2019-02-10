@@ -2,13 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:musicp/auth.dart';
-import 'package:musicp/store.dart';
 
+import '../auth.dart';
+import '../store.dart';
 import 'app_state.dart';
 
 class StateContainer extends StatefulWidget {
-
   final AppState state;
   final Widget child;
 
@@ -18,7 +17,9 @@ class StateContainer extends StatefulWidget {
   });
 
   static _StateContainerState of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(_InheritedStateContainer) as _InheritedStateContainer).data;
+    return (context.inheritFromWidgetOfExactType(_InheritedStateContainer)
+            as _InheritedStateContainer)
+        .data;
   }
 
   @override

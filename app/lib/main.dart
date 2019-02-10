@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/servers_screen.dart';
 
 import 'screens/lists_screen.dart';
 import 'screens/main_screen.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       home: MainScreen(),
       routes: {
         '/lists': (context) => ListsScreen(),
+        '/servers': (context) => ServersScreen(),
       },
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:musicp/domain/music.dart';
-import 'package:musicp/screens/tag_widget.dart';
 
+import '../domain/music.dart';
+import '../screens/tag_widget.dart';
 import '../state/app_state.dart';
 import '../state/state_container.dart';
 import 'scaffold_wrapper.dart';
@@ -73,7 +73,10 @@ class _MainScreenState extends State<MainScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(child: Container(child: TextField(), padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0))),
+        Expanded(
+            child: Container(
+                child: TextField(),
+                padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0))),
         Row(
           children: [
             IconButton(icon: Icon(Icons.search), onPressed: () {}),
@@ -85,7 +88,9 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _tagsList(BuildContext context, AppState state) {
-    Stream<List<String>> tagStream = state.dataset.musics().map((m) => m.expand((m) => m.tags).toSet().toList()..sort());
+    Stream<List<String>> tagStream = state.dataset
+        .musics()
+        .map((m) => m.expand((m) => m.tags).toSet().toList()..sort());
     return StreamBuilder(
       stream: tagStream,
       builder: (BuildContext context, AsyncSnapshot<List<String>> data) {
