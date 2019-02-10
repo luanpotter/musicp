@@ -1,46 +1,51 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:musicp/domain/music.dart';
+import 'package:musicp/screens/tag_widget.dart';
 
 import '../state/app_state.dart';
 import '../state/state_container.dart';
+import 'scaffold_wrapper.dart';
 
 class MainScreen extends StatefulWidget {
-  MainScreen({ Key key }) : super(key: key);
+  MainScreen({Key key}) : super(key: key);
 
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-
   Widget _loading() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          padding: EdgeInsets.all(8.0),
-          child: CircularProgressIndicator(),
-        ),
-        Text('Loading...'),
-      ]
-    );
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(),
+          ),
+          Text('Loading...'),
+        ]);
   }
 
-  Widget _doBuild(AppState state) {
+  Widget _doBuild(BuildContext context, AppState state) {
     if (state.loading) {
       return _loading();
     }
 
-    return Column(children: [
-      _helloMessage(state),
-      Text('Musics'),
-      _musicsList(state),
-    ]);
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _omniInput(context, state),
+          _musicsList(context, state),
+          Center(child: _tagsList(context, state)),
+        ],
+      ),
+    );
   }
 
-  Widget _musicsList(AppState state) {
+  Widget _musicsList(BuildContext context, AppState state) {
     return StreamBuilder(
       stream: state.dataset.musics(),
       builder: (BuildContext context, AsyncSnapshot<List<Music>> snapshot) {
@@ -50,67 +55,72 @@ class _MainScreenState extends State<MainScreen> {
         if (!snapshot.hasData) {
           return Text('Loading...');
         }
-        return Expanded(child: ListView.builder(
-          itemExtent: 80.0,
-          itemCount: snapshot.data.length,
-          itemBuilder: (ctx, idx) => this._buildMusic(snapshot.data[idx]),
-          shrinkWrap: true,
-        ));
+        return Expanded(
+          child: ListView.builder(
+            padding: EdgeInsets.all(8.0),
+            itemExtent: 80.0,
+            itemCount: snapshot.data.length,
+            itemBuilder: (ctx, idx) =>
+                this._buildMusic(context, snapshot.data[idx]),
+            shrinkWrap: true,
+          ),
+        );
       },
     );
   }
 
-  Widget _buildMusic(Music music) {
+  Widget _omniInput(BuildContext context, AppState state) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(child: Container(child: TextField(), padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0))),
+        Row(
+          children: [
+            IconButton(icon: Icon(Icons.search), onPressed: () {}),
+            IconButton(icon: Icon(Icons.add), onPressed: () {}),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _tagsList(BuildContext context, AppState state) {
+    Stream<List<String>> tagStream = state.dataset.musics().map((m) => m.expand((m) => m.tags).toSet().toList()..sort());
+    return StreamBuilder(
+      stream: tagStream,
+      builder: (BuildContext context, AsyncSnapshot<List<String>> data) {
+        if (data.hasError) {
+          return Text('Error: ${data.error}');
+        }
+
+        if (!data.hasData) {
+          return Text('Loading...');
+        }
+
+        List<String> tags = data.data;
+        return Row(children: tags.map((tag) => TagWidget(tag: tag)).toList());
+      },
+    );
+  }
+
+  Widget _buildMusic(BuildContext context, Music music) {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(music.desc),
-          Text(music.tags.join(', ')),
+          Row(children: music.tags.map((tag) => TagWidget(tag: tag)).toList()),
         ],
       ),
-    );
-  }
-
-  Widget _helloMessage(AppState state) {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Hi, ${state.user.user.displayName}!'),
-          StreamBuilder(
-            stream: state.dataset.ref.snapshots(),
-            builder: (context, data) {
-              if (data.hasError) {
-                return Text('Error: ${data.error}');
-              }
-
-              if (!data.hasData) {
-                return Text('Loading...');
-              }
-
-              DocumentSnapshot doc = data.data as DocumentSnapshot;
-              if (doc.data == null) {
-                return Text('Loading...');
-              }
-
-              String datasetId = doc.documentID;
-              String datasetName = doc.data['name'];
-              return Text('Current Collection: $datasetName (id: $datasetId)');
-            },
-          ),
-        ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
     AppState appState = StateContainer.of(context).state;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('musicp'),
-      ),
-      body: Center(child: _doBuild(appState)),
+    return ScaffoldWrapper(
+      state: appState,
+      child: _doBuild(context, appState),
     );
   }
 }
