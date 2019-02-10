@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../domain/server.dart';
 import '../state/app_state.dart';
@@ -26,8 +29,41 @@ class ServersScreen extends StatelessWidget {
     showDialog(context: context, builder: this.renderDialog);
   }
 
-  void _addNewServer() {
-    // TODO
+  void _addNewServer(BuildContext context) async {
+    String url = addServerUrlController.text;
+    print('Fetching $url');
+
+    try {
+      http.Response response = await http.get('$url/details');
+      if (response.statusCode != 200) {
+        _error(context,
+            'Error fetching server, status: ${response.statusCode}, message: ${response.body ?? ''}');
+      } else {
+        String jsonStr = response.body;
+        print('Response: $jsonStr');
+
+        Map<String, dynamic> map = json.decode(jsonStr);
+        // TODO do something
+
+        showDialog(
+          context: context,
+          builder: (ctx) =>
+              AlertDialog(title: Text('Success'), content: Text('...')),
+        );
+      }
+    } catch (ex) {
+      _error(context, 'Server not found.');
+    }
+  }
+
+  void _error(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+            title: Text('Error'),
+            content: Text(message),
+          ),
+    );
   }
 
   SimpleDialog renderDialog(BuildContext context) {
@@ -51,8 +87,12 @@ class ServersScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  IconButton(icon: Icon(Icons.cancel), onPressed: () => Navigator.of(context).pop()),
-                  IconButton(icon: Icon(Icons.check), onPressed: () => this._addNewServer()),
+                  IconButton(
+                      icon: Icon(Icons.cancel),
+                      onPressed: () => Navigator.of(context).pop()),
+                  IconButton(
+                      icon: Icon(Icons.check),
+                      onPressed: () => this._addNewServer(context)),
                 ],
               ),
             ),
