@@ -8,5 +8,8 @@ const myDetails = {
 
 app.get('/', () => ({ message: 'Welcome to the Musicp server!' }));
 app.get('/details', () => myDetails);
+app.get('/query', () => 'TODO impl this!');
+app.get('/download', () => 'TODO impl this!');
+app.get('/status', () => 'TODO impl this!');
 
 module.exports = app;
