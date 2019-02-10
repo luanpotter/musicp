@@ -1,7 +1,12 @@
 const ApiBuilder = require('claudia-api-builder');
 const app = new ApiBuilder();
 
-app.get('/', () => ({ message: 'Hello, World!' }));
-app.get('/details', () => ({ foo: 'bar' }));
+const myDetails = {
+    name: 'Musicp Server Node',
+    protocol: 'musicp',
+};
+
+app.get('/', () => ({ message: 'Welcome to the Musicp server!' }));
+app.get('/details', () => myDetails);
 
 module.exports = app;
