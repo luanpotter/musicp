@@ -6,8 +6,9 @@ import '../state/app_state.dart';
 class ScaffoldWrapper extends StatelessWidget {
   final AppState state;
   final Widget child;
+  final Widget floatingActionButton;
 
-  ScaffoldWrapper({@required this.state, @required this.child});
+  ScaffoldWrapper({@required this.state, @required this.child, this.floatingActionButton });
 
   Widget _helloMessage() {
     if (state.loading) {
@@ -57,12 +58,12 @@ class ScaffoldWrapper extends StatelessWidget {
           _helloMessage(),
           Divider(),
           ListTile(
-            title: Text('Home'),
+            title: Text('Listen'),
             onTap: () => Navigator.of(context).pushNamed('/'),
           ),
           ListTile(
-            title: Text('Lists'),
-            onTap: () => Navigator.of(context).pushNamed('/lists'),
+            title: Text('Explore'),
+            onTap: () => Navigator.of(context).pushNamed('/explore'),
           ),
           ListTile(
             title: Text('Servers'),
@@ -70,6 +71,7 @@ class ScaffoldWrapper extends StatelessWidget {
           ),
         ],
       )),
+      floatingActionButton: floatingActionButton,
       body: Center(child: child),
     );
   }

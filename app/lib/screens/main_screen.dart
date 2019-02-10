@@ -15,7 +15,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
   String error;
   Query query = Query.all();
   TextEditingController queryController = TextEditingController();
@@ -106,20 +105,9 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _omniInput(BuildContext context, AppState state) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-            child: Container(
-                child: TextField(controller: queryController),
-                padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0))),
-        Row(
-          children: [
-            IconButton(icon: Icon(Icons.search), onPressed: () {}),
-            IconButton(icon: Icon(Icons.add), onPressed: () {}),
-          ],
-        ),
-      ],
+    return Container(
+      child: TextField(controller: queryController),
+      padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
     );
   }
 
