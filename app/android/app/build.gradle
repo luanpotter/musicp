@@ -29,7 +29,7 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     lintOptions {
         disable 'InvalidPackage'
@@ -37,9 +37,8 @@ android {
 
     defaultConfig {
         applicationId "app.musicp"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 27
-        compileSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

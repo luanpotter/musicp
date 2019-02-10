@@ -1,0 +1,25 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+	  match /datasets {
+  	  allow read;
+    }
+    match /datasets/{dataset} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+      function isOwnerForNew() {
+      	return resource == null && request.resource.data.owner == request.auth.uid;
+      }
+      function isOwnerForExisting() {
+      	return resource != null && resource.data.owner == request.auth.uid;
+      }
+      function isOwner() {
+      	return isOwnerForNew() || isOwnerForExisting() ;
+      }
+      allow read, write: if isSignedIn() && isOwner();
+    }
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

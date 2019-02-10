@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../state/app_state.dart';
@@ -12,6 +13,46 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
 
+  Widget _loading() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          padding: EdgeInsets.all(8.0),
+          child: CircularProgressIndicator(),
+        ),
+        Text('Loading...'),
+      ]
+    );
+  }
+
+  Widget _doBuild(AppState state) {
+    if (state.loading) {
+      return _loading();
+    }
+
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Hi, ${state.user.user.displayName}!'),
+          StreamBuilder(
+            stream: state.dataset.ref.snapshots(),
+            builder: (context, data) {
+              if (data.hasError) {
+                return Text('Error: ${data.error}');
+              }
+              if (!data.hasData) {
+                return Text('Loading...');
+              }
+              DocumentSnapshot doc = data.data as DocumentSnapshot;
+              return Column(children: doc.data.keys.map((k) => Text(doc.data[k])).toList());
+            },
+          ),
+        ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     AppState appState = StateContainer.of(context).state;
@@ -20,20 +61,7 @@ class _MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         title: Text('musicp'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('Loading: ${appState.loading}'),
-            Text('User: ${appState.user.user?.displayName}'),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+      body: Center(child: _doBuild(appState)),
     );
   }
 }
