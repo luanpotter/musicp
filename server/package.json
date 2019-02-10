@@ -1,0 +1,25 @@
+{
+  "name": "musicp-server",
+  "version": "0.1.0",
+  "description": "A sample musicp server (or node), as an example impl.",
+  "main": "main.js",
+  "scripts": {
+    "start": "claudia-local-api --api-module main",
+    "deploy": "claudia update --profile claudia",
+    "re-deploy": "claudia update --profile claudia --region us-east-2 --api-module main"
+  },
+  "keywords": [
+    "musicp",
+    "server",
+    "node"
+  ],
+  "author": "Luan Nico",
+  "license": "MIT",
+  "dependencies": {
+    "claudia-api-builder": "^4.1.2"
+  },
+  "devDependencies": {
+    "claudia": "^5.4.0",
+    "claudia-local-api": "^2.0.0"
+  }
+}
