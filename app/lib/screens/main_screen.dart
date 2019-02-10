@@ -61,7 +61,15 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildMusic(Music music) {
-    return Text(music.name);
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(music.desc),
+          Text(music.tags.join(', ')),
+        ],
+      ),
+    );
   }
 
   Widget _helloMessage(AppState state) {

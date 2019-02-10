@@ -5,6 +5,6 @@ class DatasetState {
   DocumentReference ref;
 
   Stream<List<Music>> musics() {
-    return ref.collection('musics').snapshots().map((docs) => (docs.documents ?? []).map((doc) => Music.from(doc.data)).toList().cast());
+    return ref.collection('musics').snapshots().map((docs) => (docs.documents ?? []).map((doc) => Music.from(doc.documentID, doc.data)).toList().cast());
   }
 }

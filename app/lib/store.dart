@@ -5,7 +5,7 @@ class Store {
 
   static Future<DocumentReference> fetchDatasetReference(FirebaseUser user) async {
     QuerySnapshot query = await Firestore.instance.collection('datasets')
-      .where('author', isEqualTo: user.uid)
+      .where('owner', isEqualTo: user.uid)
       .where('name', isEqualTo: '_default_')
       .getDocuments();
 

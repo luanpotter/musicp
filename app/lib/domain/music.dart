@@ -1,15 +1,26 @@
 class Music {
 
+  String id;
   String name;
-  String author;
+  String artistId;
+  String source;
+  List<String> tags;
 
-  static from(Map<String, dynamic> data) {
+  static from(String id, Map<String, dynamic> data) {
     if (data == null) {
       return null;
     }
     Music m = Music();
+    m.id = id;
     m.name = data['name'];
-    m.author = data['author'];
+    m.artistId = data['artistId'];
+    m.source = data['source'];
+    m.tags = (data['tags'] as List).cast();
     return m;
+  }
+
+  String get desc {
+    String artist = artistId == null ? '' : ' ($artistId)';
+    return '$name$artist';
   }
 }
