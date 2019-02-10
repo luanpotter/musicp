@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+// TODO select pretty colors
 const COLORS = [
   Colors.blueGrey,
   Colors.cyan,
@@ -11,7 +12,7 @@ const COLORS = [
   Colors.red,
   Colors.purple,
   Colors.yellow,
-]; // TODO select pretty colors
+];
 
 Random random = Random.secure();
 
@@ -20,17 +21,25 @@ class TagWidget extends StatelessWidget {
   static final Map<String, Color> tagColors = {};
 
   final String tag;
+  final void Function(String) onClick;
 
-  TagWidget({this.tag});
+  TagWidget({ @required this.tag, this.onClick });
 
   @override
   Widget build(BuildContext context) {
     Color color = _getColor(tag);
-    return Container(
-      padding: EdgeInsets.all(4.0),
-      margin: EdgeInsets.all(4.0),
-      color: color,
-      child: Text(tag),
+    return GestureDetector(
+      onTap: () {
+        if (this.onClick != null) {
+          this.onClick(tag);
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.all(4.0),
+        margin: EdgeInsets.all(4.0),
+        color: color,
+        child: Text(tag),
+      ),
     );
   }
 
