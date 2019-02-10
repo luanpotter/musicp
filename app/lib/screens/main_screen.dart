@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:musicp/domain/music.dart';
 
 import '../state/app_state.dart';
 import '../state/state_container.dart';
@@ -32,6 +33,38 @@ class _MainScreenState extends State<MainScreen> {
       return _loading();
     }
 
+    return Column(children: [
+      _helloMessage(state),
+      Text('Musics'),
+      _musicsList(state),
+    ]);
+  }
+
+  Widget _musicsList(AppState state) {
+    return StreamBuilder(
+      stream: state.dataset.musics(),
+      builder: (BuildContext context, AsyncSnapshot<List<Music>> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        if (!snapshot.hasData) {
+          return Text('Loading...');
+        }
+        return Expanded(child: ListView.builder(
+          itemExtent: 80.0,
+          itemCount: snapshot.data.length,
+          itemBuilder: (ctx, idx) => this._buildMusic(snapshot.data[idx]),
+          shrinkWrap: true,
+        ));
+      },
+    );
+  }
+
+  Widget _buildMusic(Music music) {
+    return Text(music.name);
+  }
+
+  Widget _helloMessage(AppState state) {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -42,11 +75,19 @@ class _MainScreenState extends State<MainScreen> {
               if (data.hasError) {
                 return Text('Error: ${data.error}');
               }
+
               if (!data.hasData) {
                 return Text('Loading...');
               }
+
               DocumentSnapshot doc = data.data as DocumentSnapshot;
-              return Column(children: doc.data.keys.map((k) => Text(doc.data[k])).toList());
+              if (doc.data == null) {
+                return Text('Loading...');
+              }
+
+              String datasetId = doc.documentID;
+              String datasetName = doc.data['name'];
+              return Text('Current Collection: $datasetName (id: $datasetId)');
             },
           ),
         ],
