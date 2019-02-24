@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../domain/music.dart';
 import '../domain/query_result.dart';
 import '../domain/server.dart';
 import '../state/app_state.dart';
@@ -104,8 +105,14 @@ class ExploreScreenState extends State<ExploreScreen> {
     );
   }
 
-  void _doAddSong(BuildContext context, Server server, QueryResult song) {
-    print('do add!');
+  void _doAddSong(BuildContext context, Server server, QueryResult song) async {
+    AppState appState = StateContainer.of(context).state;
+
+    Music m = Music();
+    m.name = song.title;
+    m.source = '${server.protocol}://${song.id}';
+
+    await appState.dataset.createMusic(m);
     Navigator.of(context).pop();
   }
 

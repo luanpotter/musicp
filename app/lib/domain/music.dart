@@ -15,12 +15,22 @@ class Music {
     m.name = data['name'];
     m.artistId = data['artistId'];
     m.source = data['source'];
-    m.tags = (data['tags'] as List).cast();
+    m.tags = (data['tags'] as List ?? []).cast();
     return m;
   }
 
   String get desc {
     String artist = artistId == null ? '' : ' ($artistId)';
     return '$name$artist';
+  }
+
+  Map<String, String> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'artistId': artistId,
+      'source': source,
+      'tags': tags?.join(','), // TODO better test this!!!
+    };
   }
 }

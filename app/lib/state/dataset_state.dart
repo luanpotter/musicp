@@ -25,4 +25,8 @@ class DatasetState {
   Future<DocumentReference> createServer(Server server) {
     return ref.collection('servers').add(server.toMap());
   }
+
+  Future<DocumentReference> createMusic(Music m) {
+    return ref.collection('musics').add(m.toMap());
+  }
 }
