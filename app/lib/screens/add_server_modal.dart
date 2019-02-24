@@ -110,6 +110,8 @@ class _AddServerModalState extends State<AddServerModal> {
 
         Map<String, dynamic> map = json.decode(jsonStr);
         Server newServer = Server.fromMap(map.cast());
+        newServer.headerName = headerName;
+        newServer.headerValue = headerValue;
 
         AppState appState = StateContainer.of(context).state;
         DocumentReference ref = await appState.dataset.createServer(newServer);

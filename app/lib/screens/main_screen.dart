@@ -93,7 +93,7 @@ class _MainScreenState extends State<MainScreen> {
         return Expanded(
           child: ListView.builder(
             padding: EdgeInsets.all(8.0),
-            itemExtent: 80.0,
+            itemExtent: 40.0,
             itemCount: musicList.length,
             itemBuilder: (ctx, idx) =>
                 this._buildMusic(context, musicList[idx]),

@@ -30,7 +30,12 @@ class ServersScreen extends StatelessWidget {
 
   Widget _doBuild(BuildContext context, AppState appState) {
     return Container(
-      child: this._results(context, appState),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          this._results(context, appState),
+        ],
+      ),
       padding: EdgeInsets.all(8.0),
     );
   }
@@ -49,13 +54,15 @@ class ServersScreen extends StatelessWidget {
         if (serverList.isEmpty) {
           return Text('No servers found.');
         }
-        return ListView.builder(
-          padding: EdgeInsets.all(8.0),
-          itemExtent: 80.0,
-          itemCount: serverList.length,
-          itemBuilder: (ctx, idx) =>
-              this._buildServer(context, serverList[idx]),
-          shrinkWrap: true,
+        return Expanded(
+          child: ListView.builder(
+            padding: EdgeInsets.all(8.0),
+            itemExtent: 40.0,
+            itemCount: serverList.length,
+            itemBuilder: (ctx, idx) =>
+                this._buildServer(context, serverList[idx]),
+            shrinkWrap: true,
+          ),
         );
       },
     );
