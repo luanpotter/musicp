@@ -27,8 +27,12 @@ class ExploreScreenState extends State<ExploreScreen> {
   Widget _doBuild(BuildContext context, AppState appState) {
     return Column(
       children: [
-        Container(child: this._header(context, appState), padding: EdgeInsets.all(8.0)),
-        Container(child: this._results(context, appState), padding: EdgeInsets.all(8.0)),
+        Container(
+            child: this._header(context, appState),
+            padding: EdgeInsets.all(8.0)),
+        Container(
+            child: this._results(context, appState),
+            padding: EdgeInsets.all(8.0)),
       ],
     );
   }
@@ -59,17 +63,16 @@ class ExploreScreenState extends State<ExploreScreen> {
         }
         List<Server> serverList = snapshot.data;
         if (serverList.isEmpty) {
-          return Text('No servers found. You must add servers in order to find music.');
+          return Text(
+              'No servers found. You must add servers in order to find music.');
         }
-        return Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.all(8.0),
-            itemExtent: 80.0,
-            itemCount: serverList.length,
-            itemBuilder: (ctx, idx) =>
-                this._buildServer(context, serverList[idx]),
-            shrinkWrap: true,
-          ),
+        return ListView.builder(
+          padding: EdgeInsets.all(8.0),
+          itemExtent: 80.0,
+          itemCount: serverList.length,
+          itemBuilder: (ctx, idx) =>
+              this._buildServer(context, serverList[idx]),
+          shrinkWrap: true,
         );
       },
     );
