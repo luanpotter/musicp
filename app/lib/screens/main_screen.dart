@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../domain/music.dart';
+import '../domain/enhanced_music.dart';
 import '../domain/query.dart';
 import '../screens/tag_widget.dart';
 import '../state/app_state.dart';
 import '../state/state_container.dart';
+import 'play_control_widget.dart';
 import 'scaffold_wrapper.dart';
 
 class MainScreen extends StatefulWidget {
@@ -81,15 +82,15 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _musicsList(BuildContext context, AppState state) {
     return StreamBuilder(
-      stream: state.dataset.musics(),
-      builder: (BuildContext context, AsyncSnapshot<List<Music>> snapshot) {
+      stream: state.enhancedMusics(),
+      builder: (BuildContext context, AsyncSnapshot<List<EnhancedMusic>> snapshot) {
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
         if (!snapshot.hasData) {
           return Text('Loading...');
         }
-        List<Music> musicList = snapshot.data.where(query.getFilter()).toList();
+        List<EnhancedMusic> musicList = snapshot.data.where(query.getFilter()).toList();
         return Expanded(
           child: ListView.builder(
             padding: EdgeInsets.all(8.0),
@@ -135,16 +136,18 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildMusic(BuildContext context, Music music) {
+  Widget _buildMusic(BuildContext context, EnhancedMusic music) {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(music.desc),
+          Text(music.music.desc),
           Row(
-              children: music.tags
-                  .map((tag) => TagWidget(tag: tag, onClick: this._clickTag))
-                  .toList()),
+              children: music.music.tags
+                  .map<Widget>((tag) => TagWidget(tag: tag, onClick: this._clickTag))
+                  .toList()
+                  ..add(PlayControlWidget(music: music))
+          ),
         ],
       ),
     );

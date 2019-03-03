@@ -1,0 +1,3 @@
+enum DownloadState {
+  STARTED, DOWNLOADING, FINISHED
+}

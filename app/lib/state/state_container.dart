@@ -61,6 +61,12 @@ class _StateContainerState extends State<StateContainer> {
       state.dataset.ref = ref;
     });
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    state.dispose();
+  }
 }
 
 class _InheritedStateContainer extends InheritedWidget {

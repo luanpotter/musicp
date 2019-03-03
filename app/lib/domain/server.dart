@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import 'download_result.dart';
 import 'query_result.dart';
 
 class Server {
@@ -41,11 +42,29 @@ class Server {
 
   Future<List<QueryResult>> query(String param) async {
     String q = Uri.encodeQueryComponent(param);
-    http.Request req = http.Request('GET', Uri.parse('$url/query?q=$q'));
-    req.headers[headerName] = headerValue;
-    http.StreamedResponse resp = await req.send();
-    String jsonStr = new String.fromCharCodes(await resp.stream.toBytes());
+    String jsonStr = await _getRequest('$url/query?q=$q');
     List<dynamic> decoded = json.decode(jsonStr);
     return decoded.map((obj) => QueryResult.from((obj as Map).cast())).toList();
+  }
+
+  Future<DownloadResult> startDownload(String id) async {
+    String q = Uri.encodeQueryComponent(id);
+    String jsonStr = await _getRequest('$url/download?id=$q');
+    Map decoded = json.decode(jsonStr);
+    return DownloadResult.fromMap(decoded.cast());
+  }
+
+  Future<String> downloadStatus(String downloadId) async {
+    String q = Uri.encodeQueryComponent(downloadId);
+    String jsonStr = await _getRequest('$url/status?downloadId=$q');
+    Map decoded = json.decode(jsonStr);
+    return decoded['status'];
+  }
+
+  Future<String> _getRequest(String url) async {
+    http.Request req = http.Request('GET', Uri.parse(url));
+    req.headers[headerName] = headerValue;
+    http.StreamedResponse resp = await req.send();
+    return String.fromCharCodes(await resp.stream.toBytes());
   }
 }

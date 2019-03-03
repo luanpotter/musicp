@@ -1,4 +1,5 @@
-import 'package:musicp/domain/music.dart';
+import 'enhanced_music.dart';
+import 'music.dart';
 
 class Query {
 
@@ -40,8 +41,9 @@ class Query {
     return n(t1).contains(n(t2));
   }
 
-  bool Function(Music) getFilter() {
-    return (Music m) {
+  bool Function(EnhancedMusic) getFilter() {
+    return (EnhancedMusic em) {
+      Music m = em.music;
       bool textMatch = texts.map((keyword) => cmp(m.artistId, keyword) || cmp(m.name, keyword)).fold(true, (a, b) => a && b);
       bool nameMatch = names.map((name) => cmp(m.name, name)).fold(true, (a, b) => a && b);
       bool matchTags = tags.map((tag) => m.tags.contains(tag)).fold(true, (a, b) => a && b);

@@ -1,5 +1,4 @@
 class Music {
-
   String id;
   String name;
   String artistId;
@@ -23,6 +22,10 @@ class Music {
     String artist = artistId == null ? '' : ' ($artistId)';
     return '$name$artist';
   }
+
+  List<String> get _sourceParts => source.split('://');
+  String get serverProtocol => _sourceParts.first;
+  String get serverId => _sourceParts.last;
 
   Map<String, String> toMap() {
     return {
