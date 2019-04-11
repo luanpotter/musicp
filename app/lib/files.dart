@@ -11,7 +11,7 @@ class Files {
 
   static Future<String> getFileRef(String musicId) async {
     String path = await _localPath;
-    return '$path/$musicId.flv';
+    return '$path/$musicId.mp3';
   }
 
   static Future<bool> exists(String musicId) async {

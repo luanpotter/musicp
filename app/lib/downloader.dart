@@ -15,10 +15,11 @@ class Downloader {
     DownloadResult result = await server.startDownload(id);
     print('Started ${result.downloadId}');
     String status = 'not-found';
-    while (status == 'not-found') {
+    while (status == 'not-found' || status == 'pending') {
       status = await server.downloadStatus(result.downloadId);
       sleep(Duration(seconds: 2));
     }
+    print('Status: $status');
     state.downloading.emit(musicId, DownloadState.DOWNLOADING);
     print('Done! Downloading from ${result.downloadUrl}');
     await Files.saveContent(musicId, result.downloadUrl);

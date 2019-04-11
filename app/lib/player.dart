@@ -7,6 +7,7 @@ class Player {
   static AudioPlayer player = AudioPlayer()..setReleaseMode(ReleaseMode.RELEASE);
 
   static void play(AppState appState, EnhancedMusic music) {
+    print('Playing from ${music.filePathReference}');
     player.play(music.filePathReference, isLocal: true);
   }
 }
